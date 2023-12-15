@@ -1,33 +1,84 @@
 from flask import Flask, request, jsonify, flash, redirect
 from pdf_converter import pdf_to_text
 import os
+import tensorflow as tf
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import load_model
+import pickle
+from preprocessing import cleanResume,removingStopWords
 
 app = Flask(__name__)
+app.config['ALLOWED_EXTENSIONS'] = set(['pdf'])
+
+def allowed_file(filename):
+    return '.' in filename and filename.split('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+# load model and tokenizer
+model_path = os.path.join(os.getcwd(),'cv_model.h5')
+tokenizer_path = os.path.join(os.getcwd(),'tokenizer_json.pickle')
+model = load_model(model_path)
+with open(tokenizer_path, 'rb') as handle:
+    tokenizer_json = pickle.load(handle)
+tokenizer = tf.keras.preprocessing.text.tokenizer_from_json(
+    tokenizer_json
+)
 
 @app.route('/')
-def home():
-    return 'Cvier'
+def index():
+    return jsonify({
+        'status': {
+            'code': 200,
+            'message': 'Success conected to API'
+        },
+        'data': None
+    }), 200
 
-@app.route("/cv-converter", methods=['POST'])
-def cv_converter():
+@app.route("/cv-predict", methods=['POST'])
+def cv_predict():
     if 'file' not in request.files:
         return jsonify({
-            'message' : 'No file part in the request'
+            'status': {
+                'code' : 400,
+                'message' : 'No file part in the request'
+            }, 
+            'data' : None
         }), 400
     file = request.files['file']
     if file.filename == '':
         return jsonify({
-            'message' : 'No file selected for uploading'
+            'status' : {
+                'code' : 400,
+                'message' : 'No file selected for uploading'
+            },
+            'data' : None
         }), 400
+    
+    # save file temporary    
     temp_cv = f'{os.getcwd()}'
     file_path = os.path.join(temp_cv,'temp.pdf')
     file.save(file_path)
     
+    # convert pdf to text
     text = pdf_to_text(file_path)
+
+    # preprocessing text
+    text = cleanResume(removingStopWords(text))
+    text = tokenizer.texts_to_sequences(text)
+    text = pad_sequences(text)
+    
+    predict = model.predict(text)
     
     return jsonify({
-        'text' : text
+        'status' : {
+            'code' : 201,
+            'massage' : 'Success predicting'
+        },
+        'data' : {
+            'prediction' : int(predict.argmax(axis=1)[0])
+        }
     }), 201
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True,
+            host="0.0.0.0",
+            port=int(os.environ.get("PORT", 8080)))
