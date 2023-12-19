@@ -6,9 +6,25 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 import pickle
 from preprocessing import cleanResume,removingStopWords
+from quick_sort import quickSort
+import pandas as pd
 
 app = Flask(__name__)
 app.config['ALLOWED_EXTENSIONS'] = set(['pdf'])
+list_labels = {}
+file = pd.read_csv('label.csv')
+labels = file['label']
+index = file['index']
+list_job = {
+    0 : {
+        'skill' : {
+            ''
+        }
+    }
+}
+
+for i in range(1,len(index)):
+  list_labels[i] = labels[i-1]
 
 def allowed_file(filename):
     return '.' in filename and filename.split('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
@@ -67,6 +83,19 @@ def cv_predict():
     text = pad_sequences(text)
     
     predict = model.predict(text)
+    predict = predict[-1]
+    predict_dict = []
+    for i in range(1,len(predict)):
+        predict_dict.append({
+        'label index' : i,
+        'label chance' : predict[i]
+    })
+    quickSort(predict_dict,0,len(predict_dict)-1)
+    
+    top_labels = predict_dict[:3]
+    result = []
+    for i in top_labels:
+        result.append(list_labels[i['label index']])
     
     return jsonify({
         'status' : {
@@ -74,7 +103,7 @@ def cv_predict():
             'massage' : 'Success predicting'
         },
         'data' : {
-            'prediction' : int(predict.argmax(axis=1)[0])
+            'prediction' : result
         }
     }), 201
 
