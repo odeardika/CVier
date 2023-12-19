@@ -11,20 +11,44 @@ import pandas as pd
 
 app = Flask(__name__)
 app.config['ALLOWED_EXTENSIONS'] = set(['pdf'])
-list_labels = {}
 file = pd.read_csv('label.csv')
 labels = file['label']
-index = file['index']
+
 list_job = {
-    0 : {
+    '0' : {
         'skill' : {
-            ''
+            'Mathematics' : 5,
+            'Data Science' : 15,
+            'Data Engineer' : 15,
+            'Machine Learning' : 65
+        }
+    },
+    '1' : {
+        'skill' : {
+            'Software Developer' : 10,
+            'Software Engineer' : 10,
+            'Backend Engineer' : 10,
+            'Frontend Developer' : 10,
+            'Web Developer' : 60
+        }
+    },
+    "2" : {
+        'skill' : {
+            'Software Developer' : 10,
+            'Software Engineer' : 10,
+            'Backend Engineer' : 10,
+            'Frontend Developer' : 10,
+            'Mobile Developer' : 60
+        }
+    },
+    "3" : {
+        'skill' : {
+            'Cloud Computing' : 50,
+            'Cloud Architect' : 50
         }
     }
 }
 
-for i in range(1,len(index)):
-  list_labels[i] = labels[i-1]
 
 def allowed_file(filename):
     return '.' in filename and filename.split('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
@@ -59,7 +83,16 @@ def cv_predict():
             }, 
             'data' : None
         }), 400
+    if 'job' not in request.form:
+        return jsonify({
+            'status' : {
+                'code' : 400,
+                'message' : 'Job not selected yet'
+            },
+            'data' : None
+        }), 400
     file = request.files['file']
+    job = request.form['job']
     if file.filename == '':
         return jsonify({
             'status' : {
@@ -85,17 +118,27 @@ def cv_predict():
     predict = model.predict(text)
     predict = predict[-1]
     predict_dict = []
-    for i in range(1,len(predict)):
+    for i in range(len(predict)):
         predict_dict.append({
         'label index' : i,
         'label chance' : predict[i]
     })
     quickSort(predict_dict,0,len(predict_dict)-1)
     
-    top_labels = predict_dict[:3]
+    # calculate percentage
+    skill = list_job[job]['skill']
+    
+    top_labels = predict_dict[:len(skill)]
     result = []
     for i in top_labels:
-        result.append(list_labels[i['label index']])
+        result.append(labels[i['label index']])
+    improve = []
+    percentage = 0
+    for i in skill:
+        if i not in result:
+            improve.append(i)
+        else:
+            percentage += skill[i]
     
     return jsonify({
         'status' : {
@@ -103,7 +146,8 @@ def cv_predict():
             'massage' : 'Success predicting'
         },
         'data' : {
-            'prediction' : result
+            'percentage' : percentage,
+            'improve' : improve
         }
     }), 201
 

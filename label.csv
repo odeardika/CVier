@@ -1,11 +1,13 @@
-index,label
-1,datascinece
-2,label a
-3,label b
-4,label c
-5,label datascinece
-6,label i
-7,label p
-8,label o
-9,oop label
-10,label pp
+label,index
+Data Science,0
+Data Engineer,1
+Machine Learning,2
+Mathematics,3
+Backend Engineer,4
+Software Developer,5
+Mobile Developer,6
+Cloud Architect,7
+Web Developer,8
+Software Engineer,9
+Cloud Computing,10
+Frontend Developer,11
