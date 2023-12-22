@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">CVierapp</string>
+    <string name="logo_desc">App Logo</string>
+
+    //user related
+    <string name="user_username">Username</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="user_confirm_password">Confirm Password</string>
+    <string name="email_alert">Invalid Email Address!</string>
+    <string name="pass_alert">Password Can\'t Less Than 8 Characters!</string>
+    <string name="confirm_pass_alert">Password Didn\'t Match!</string>
+    <string name="must_filled">Must Be Filled</string>
+
+    //welcome
+    <string name="welcome_title">Welcome To CVier App!</string>
+    <string name="welcome_desc">Save Your Time by Automate Your CV Evaluation.</string>
+    <string name="welcome_button">Get Started</string>
+
+    //login
+    <string name="login_title">Login</string>
+    <string name="login_desc">Login to the CVier app to continue.</string>
+    <string name="forgot_pass_button">Forgot Password?</string>
+    <string name="login_button">Login</string>
+    <string name="login_to_register_text">Don’t Have Account?</string>
+    <string name="login_to_register_button">Sign Up Now</string>
+    <string name="login_failed">Login Failed: %s</string>
+
+    //register
+    <string name="register_title">Register</string>
+    <string name="register_desc">Fill out the form to register.</string>
+    <string name="register_button">Register</string>
+    <string name="register_to_login_text">Already Have Account?</string>
+    <string name="register_to_login_button">Sign In Now</string>
+    <string name="register_success">Registration Success!</string>
+    <string name="register_failed">Registration Failed: %s</string>
+
+    //main
+    <string name="main_welcome">Welcome,</string>
+    <string name="main_username">%s !</string>
+    <string name="main_title">Is your CV aligned with the job you aspire to?</string>
+    <string name="main_desc">Try our app to see if your CV is sufficient enough with your desired job.</string>
+    <string name="main_button">Test your CV</string>
+
+    //insert
+    <string name="insert_title">Upload Your CV</string>
+    <string name="insert_desc">Choose your job then upload your CV here using PDF format.</string>
+    <string name="insert_machinelearning">Machine Learning</string>
+    <string name="insert_webdev">Web Development</string>
+    <string name="insert_mobiledev">Mobile Development</string>
+    <string name="insert_cloud">Cloud Computing</string>
+    <string name="insert_button">Upload CV</string>
+    <string name="insert_api_success">Success Send To API</string>
+    <string name="insert_api_failed">Failed Send To API</string>
+    <string name="insert_choose_job_first">Choose The Job First</string>
+    
+    //result
+    <string name="result_title">Result</string>
+    <string name="result_cv">Your CV score is :</string>
+    <string name="result_progressbar_text">%d%</string>
+    <string name="result_cv_improve">What To Improve From Your CV:</string>
+    <string-array name="result_cv_improve_content">
+        <item>Mobile Development</item>
+        <item>Cloud Computing</item>
+    </string-array>
+    <string name="result_test_more">Test More</string>
+    <string name="result_back_to_menu">Back To Menu</string>
+    <string name="result_share">I Got %d% When I Test My CV. Try On Your Own In CVier App!</string>
+    
+    //profile
+    <string name="profile_title">Profile</string>
+    <string name="profile_edit">Edit Profile</string>
+    <string name="profile_logout">Log Out</string>
+    <string name="profile_logout_notif">Are You Sure Wan\'t To Log Out?</string>
+
+    //edit profile
+    <string name="editprofile_title">Edit Profile</string>
+    <string name="editprofile_button">Save Profile</string>
+</resources>
